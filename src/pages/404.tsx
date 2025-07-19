@@ -1,4 +1,4 @@
-export default function NotFound() {
+export default function Custom404() {
   return (
     <div style={{ textAlign: "center", marginTop: "10vh" }}>
       <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>
