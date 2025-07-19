@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ユーザーテーブル
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // リレーション
+  recipes           Recipe[]
+  favoriteRecipes   FavoriteRecipe[]
+
+  @@map("users")
+}
+
+// レシピテーブル
+model Recipe {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  instructions String
+  imageUrl    String?
+  estimatedTime String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // リレーション
+  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipeIngredients   RecipeIngredient[]
+  favoriteRecipes     FavoriteRecipe[]
+
+  @@map("recipes")
+}
+
+// 食材マスタテーブル
+model Ingredient {
+  id   String @id @default(cuid())
+  name String @unique
+
+  // リレーション
+  recipeIngredients RecipeIngredient[]
+
+  @@map("ingredients")
+}
+
+// レシピと食材の中間テーブル
+model RecipeIngredient {
+  id            String  @id @default(cuid())
+  recipeId      String
+  ingredientId  String
+  quantity      String
+  isUserInput   Boolean @default(false) // ユーザーが手動で追加した食材かどうか
+
+  // リレーション
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, ingredientId])
+  @@map("recipe_ingredients")
+}
+
+// お気に入りレシピテーブル
+model FavoriteRecipe {
+  id       String @id @default(cuid())
+  userId   String
+  recipeId String
+  createdAt DateTime @default(now())
+
+  // リレーション
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId])
+  @@map("favorite_recipes")
+}
