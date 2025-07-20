@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Camera, ChefHat, Heart, Sparkles } from "lucide-react";
+import HamburgerMenu from "@/components/HamburgerMenu";
 
 export default function HomePage() {
   return (
@@ -28,6 +29,7 @@ export default function HomePage() {
                 新規登録
               </Link>
             </nav>
+            <HamburgerMenu />
           </div>
         </div>
       </header>

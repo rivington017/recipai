@@ -5,7 +5,7 @@ export default function LoginPage() {
   const router = useRouter();
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/mypage");
+    router.push("/upload");
   };
   return (
     <main className="max-w-md mx-auto p-4">
