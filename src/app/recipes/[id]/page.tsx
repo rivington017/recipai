@@ -3,7 +3,13 @@ import BottomNav from "@/components/BottomNav";
 import { useParams } from "next/navigation";
 
 export default function RecipeDetailPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id =
+    typeof params?.id === "string"
+      ? params.id
+      : Array.isArray(params?.id)
+        ? params.id[0]
+        : "";
   // 仮データ
   const recipe = {
     title: `レシピタイトル ${id}`,
