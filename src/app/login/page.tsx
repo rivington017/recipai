@@ -19,6 +19,10 @@ export default function LoginPage() {
           パスワード: <span className="font-mono">password123</span>
         </div>
       </div>
+      <div className="mb-2 text-gray-600 text-sm">
+        ※
+        テストのため何も入力しなくてもログインボタンを押すと次のページに進みます。
+      </div>
       <form className="flex flex-col gap-4" onSubmit={handleLogin}>
         <input
           className="border rounded px-2 py-1"

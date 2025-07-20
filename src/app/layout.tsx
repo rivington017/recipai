@@ -15,10 +15,10 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        {pathname !== "/" && <AppHeader />}
+        {pathname !== "/" && pathname !== "/login" && <AppHeader />}
         <div
           className={
-            pathname !== "/"
+            pathname !== "/" && pathname !== "/login"
               ? "pt-14 min-h-screen bg-gray-50"
               : "min-h-screen bg-gray-50"
           }
