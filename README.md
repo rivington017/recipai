@@ -11,7 +11,7 @@ git clone https://github.com/kurosawa-kito/recipai.git
 cd recipai
 ```
 
-2. 依存パッケージのインストール　ああ
+2. 依存パッケージのインストール　
 
    ```bash
    yarn install
