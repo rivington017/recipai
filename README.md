@@ -4,42 +4,95 @@
 
 ## 開発環境セットアップ手順
 
-1. このリポジトリをクローン
+### 1. リポジトリのクローン
 
-   ```bash
-   git clone https://github.com/kurosawa-kito/recipai.git
-   cd recipai
-   ```
+```
+git clone https://github.com/kurosawa-kito/recipai.git
+cd recipai
+```
 
-2. 依存パッケージのインストール
+### 2. Node.js（Next.js）環境構築
 
-   ```bash
-   yarn install
-   # または npm install
-   ```
+- Node.js（v18以上）をインストール
+- 依存パッケージをインストール
 
-3. `.env` ファイルの作成
-   - `.env.example` をコピーして `.env` を作成し、各種APIキーやDB接続情報を記入してください。
+```
+npm install
+```
 
-   ```bash
-   cp .env.example .env
-   # 必要に応じて値を編集
-   ```
+- `.env` ファイルを作成し、DB接続情報やAPIキーを記載
 
-4. Prismaマイグレーション（DB初期化）
+### 3. Prisma（DB）セットアップ
 
-   ```bash
-   npx prisma generate
-   npx prisma migrate dev --name init
-   ```
+- NeonDB/PostgreSQLのDBを用意
+- `.env` の `DATABASE_URL` を設定
+- Prismaマイグレーション
 
-5. 開発サーバー起動
-   ```bash
-   yarn dev
-   # または npm run dev
-   ```
+```
+npx prisma migrate dev
+npx prisma generate
+```
 
-   - ブラウザで http://localhost:3000 を開いて動作確認
+### 4. Next.js サーバー起動
+
+```
+npm run dev
+```
+
+- ブラウザで `http://localhost:3000` にアクセス
+
+### 5. Python（FastAPI）環境構築
+
+- Python（3.9以上）をインストール
+- 仮想環境を作成・アクティベート
+
+```
+python -m venv venv
+source venv/bin/activate  # Mac/Linux
+venv\Scripts\activate   # Windows
+```
+
+- 必要パッケージをインストール
+
+```
+pip install fastapi uvicorn
+```
+
+- FastAPIサーバー起動
+
+```
+cd python
+uvicorn analyze_image:app --reload
+```
+
+- Swagger UI: `http://localhost:8000/docs`
+
+### 6. APIテスト方法
+
+- Swagger UIで `/analyze` エンドポイントをテスト（複数画像ファイルをアップロード可能）
+- curl例:
+
+```
+curl -X POST "http://localhost:8000/analyze" \
+  -F "files=@画像1.jpg" \
+  -F "files=@画像2.jpg"
+```
+
+### 7. よくあるトラブル
+
+- `.env` の設定漏れ
+- DB接続エラー
+- Python仮想環境のアクティベート忘れ
+- パッケージ未インストール
+
+### 8. 参考資料
+
+- `PROJECT_OVERVIEW.md`（全体構成）
+- `RECIPE_FLOW.md`（画面・API連携の流れ）
+
+---
+
+不明点はGitHub IssueやSlackで質問してください。
 
 ## git運用ルール
 
