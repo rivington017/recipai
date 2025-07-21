@@ -8,23 +8,21 @@ export default function UploadPage() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const router = require("next/navigation").useRouter();
-  // Blobアップロード用
-  const [file, setFile] = useState<File | null>(null);
-  const [blobUrl, setBlobUrl] = useState<string>("");
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-  const handleBlobUpload = async () => {
-    if (!file) return;
-    // @vercel/blob/client を使う
+  // 画像URLがpublic配下の場合はBlobにアップロードしてからAPI保存
+  const uploadImageToBlob = async (imageUrl: string): Promise<string> => {
+    if (!imageUrl.startsWith("/")) return imageUrl;
+    // public配下の画像をfetch→Blobアップロード
+    const res = await fetch(imageUrl);
+    const blob = await res.blob();
+    const file = new File([blob], imageUrl.split("/").pop() || "image.png", {
+      type: blob.type,
+    });
     const { upload } = await import("@vercel/blob/client");
     const { url } = await upload(file.name, file, {
       access: "public",
       handleUploadUrl: "",
     });
-    setBlobUrl(url);
+    return url;
   };
 
   // レシピ候補画像を生成APIで取得
@@ -68,36 +66,6 @@ export default function UploadPage() {
         >
           レシピ候補を見る
         </button>
-        {/* 画像BlobアップロードテストUI */}
-        <div className="w-full bg-gray-50 rounded-lg p-4 mb-4">
-          <div className="font-bold mb-2">画像Blobアップロード（テスト用）</div>
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-          <button
-            className="bg-blue-500 text-white px-3 py-1 rounded mt-2"
-            onClick={handleBlobUpload}
-            disabled={!file}
-          >
-            アップロード
-          </button>
-          {blobUrl && (
-            <div className="mt-2">
-              <div className="text-xs text-gray-500">アップロードURL:</div>
-              <a
-                href={blobUrl}
-                target="_blank"
-                rel="noopener"
-                className="text-blue-600 underline break-all"
-              >
-                {blobUrl}
-              </a>
-              <img
-                src={blobUrl}
-                alt="アップロード画像"
-                className="mt-2 w-full max-w-xs rounded"
-              />
-            </div>
-          )}
-        </div>
         {/* レシピ候補モーダル */}
         {modalOpen && (
           <div className="fixed inset-0 z-[9999] bg-black bg-opacity-40 flex items-center justify-center">
