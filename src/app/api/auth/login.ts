@@ -3,9 +3,9 @@ import { cookies } from "next/headers";
 
 // テストユーザー情報
 const TEST_USER = {
-  id: "user_test_001",
-  email: "sample@example.com",
-  password: "password123",
+  id: "cmdbc4ms400004q9d6nsi7z7m",
+  email: "test@example.com",
+  password: "password",
 };
 
 export async function POST(req: NextRequest) {
