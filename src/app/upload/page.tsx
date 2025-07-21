@@ -6,6 +6,8 @@ export default function UploadPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [images, setImages] = useState<string[]>(["", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const router = require("next/navigation").useRouter();
 
   // レシピ候補画像を生成APIで取得
   const handleShowRecipes = async () => {
@@ -100,11 +102,41 @@ export default function UploadPage() {
                       <div className="flex-1" />
                       <button
                         className="w-full bg-blue-600 text-white rounded py-2 font-bold hover:bg-blue-700 transition mt-2"
-                        onClick={() => {
-                          alert(`レシピ候補${i + 1}を選択（仮）`);
+                        disabled={saving}
+                        onClick={async () => {
+                          setSaving(true);
+                          // セッションCookieからuserId取得
+                          const getUserId = () => {
+                            const match =
+                              document.cookie.match(/userId=([^;]+)/);
+                            return match ? match[1] : "";
+                          };
+                          const userId = getUserId();
+                          const recipeData = {
+                            title: `レシピ候補${i + 1}`,
+                            description:
+                              "ふわふわ卵とトマトの優しい味わい。忙しい日でも簡単に作れるおすすめレシピです。",
+                            instructions: "材料を混ぜる。焼く。盛り付ける。",
+                            imageUrl: img,
+                            estimatedTime: "20分",
+                            userId,
+                          };
+                          const res = await fetch("/api/save-recipe", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(recipeData),
+                          });
+                          const data = await res.json();
+                          setSaving(false);
+                          setModalOpen(false);
+                          if (data.id) {
+                            router.push(`/recipes/${data.id}`);
+                          } else {
+                            alert("保存に失敗しました");
+                          }
                         }}
                       >
-                        このレシピを選ぶ
+                        {saving ? "保存中..." : "このレシピを選ぶ"}
                       </button>
                     </div>
                   ))}

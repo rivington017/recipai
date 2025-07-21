@@ -1,12 +1,30 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const handleLogin = (e: React.FormEvent) => {
+  const [error, setError] = useState("");
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/upload");
+    setError("");
+    // API認証
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (res.ok) {
+      // 認証成功: セッション保存はAPI側で
+      router.push("/upload");
+    } else {
+      setError("ログインに失敗しました");
+    }
   };
+  const defaultEmail = "sample@example.com";
+  const defaultPassword = "password123";
+  const [email, setEmail] = useState(defaultEmail);
+  const [password, setPassword] = useState(defaultPassword);
   return (
     <main className="max-w-md mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">ログイン</h1>
@@ -15,6 +33,7 @@ export default function LoginPage() {
         <div>
           メールアドレス: <span className="font-mono">sample@example.com</span>
         </div>
+        APIの動作検証
         <div>
           パスワード: <span className="font-mono">password123</span>
         </div>
@@ -27,12 +46,19 @@ export default function LoginPage() {
         <input
           className="border rounded px-2 py-1"
           placeholder="メールアドレス"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           className="border rounded px-2 py-1"
           placeholder="パスワード"
           type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
+        {error && (
+          <div className="text-red-500 text-sm text-center">{error}</div>
+        )}
         <button
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
