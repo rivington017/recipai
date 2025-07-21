@@ -10,28 +10,32 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  let userId = body.userId;
-  if (!userId) {
-    const cookieStore = await cookies();
-    userId = (await cookieStore.get("userId"))?.value || "";
+  try {
+    const body = await req.json();
+    let userId = body.userId;
+    if (!userId) {
+      const cookieStore = await cookies();
+      userId = (await cookieStore.get("userId"))?.value || "";
+    }
+    if (!userId) {
+      return NextResponse.json({ error: "userId missing" }, { status: 401 });
+    }
+
+    let blobUrl = body.imageUrl;
+
+    const recipe = await prisma.recipe.create({
+      data: {
+        userId,
+        title: body.title,
+        description: body.description,
+        instructions: body.instructions,
+        imageUrl: blobUrl,
+        estimatedTime: body.estimatedTime,
+      },
+    });
+
+    return NextResponse.json({ id: recipe.id });
+  } catch (e) {
+    return NextResponse.json({ error: String(e) }, { status: 500 });
   }
-  if (!userId) {
-    return NextResponse.json({ error: "userId missing" }, { status: 401 });
-  }
-
-  let blobUrl = body.imageUrl;
-
-  const recipe = await prisma.recipe.create({
-    data: {
-      userId,
-      title: body.title,
-      description: body.description,
-      instructions: body.instructions,
-      imageUrl: blobUrl,
-      estimatedTime: body.estimatedTime,
-    },
-  });
-
-  return NextResponse.json({ id: recipe.id });
 }
