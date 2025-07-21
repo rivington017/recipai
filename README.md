@@ -4,12 +4,12 @@
 
 ## 開発環境セットアップ手順
 
-1. このリポジトリをクローン
+### 1. リポジトリのクローン
 
-   ```bash
-   git clone https://github.com/kurosawa-kito/recipai.git
-   cd recipai
-   ```
+```
+git clone https://github.com/kurosawa-kito/recipai.git
+cd recipai
+```
 
 2. 依存パッケージのインストール　ああ
 
