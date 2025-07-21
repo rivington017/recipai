@@ -21,8 +21,8 @@ export default function LoginPage() {
       setError("ログインに失敗しました");
     }
   };
-  const defaultEmail = "sample@example.com";
-  const defaultPassword = "password123";
+  const defaultEmail = "test@example.com";
+  const defaultPassword = "password";
   const [email, setEmail] = useState(defaultEmail);
   const [password, setPassword] = useState(defaultPassword);
   return (
@@ -31,11 +31,11 @@ export default function LoginPage() {
       <div className="mb-4 p-3 bg-gray-100 rounded text-sm">
         <div className="font-bold mb-1">サンプルアカウント</div>
         <div>
-          メールアドレス: <span className="font-mono">sample@example.com</span>
+          メールアドレス: <span className="font-mono">test@example.com</span>
         </div>
         APIの動作検証
         <div>
-          パスワード: <span className="font-mono">password123</span>
+          パスワード: <span className="font-mono">password</span>
         </div>
       </div>
       <div className="mb-2 text-gray-600 text-sm">
