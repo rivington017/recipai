@@ -1,6 +1,7 @@
 "use client";
 import { Inter } from "next/font/google";
 import AppHeader from "@/components/AppHeader";
+import BottomNav from "@/components/BottomNav";
 import { usePathname } from "next/navigation";
 import "./globals.css";
 
@@ -25,6 +26,7 @@ export default function RootLayout({
         >
           {children}
         </div>
+        {pathname !== "/" && pathname !== "/login" && <BottomNav />}
       </body>
     </html>
   );
